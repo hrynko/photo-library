@@ -6,5 +6,11 @@
   [attr.aria-disabled]="disabled() || null"
   (click)="select()"
 >
-  <img [ngSrc]="src()" [width]="size.width" [height]="size.height" [alt]="label()" />
+  <img
+    [ngSrc]="src()"
+    [width]="size.width"
+    [height]="size.height"
+    [priority]="priority()"
+    [alt]="label()"
+  />
 </button>

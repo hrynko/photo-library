@@ -18,4 +18,6 @@ export interface PhotoGridItem {
 export class PhotoGrid {
   readonly items = input.required<readonly PhotoGridItem[]>();
   readonly photoSelected = output<Photo>();
+
+  protected readonly priorityTileCount = 6;
 }

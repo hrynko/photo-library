@@ -1,10 +1,11 @@
 <ul class="grid">
-  @for (item of items(); track item.photo.id) {
+  @for (item of items(); track item.photo.id; let index = $index) {
     <li>
       <app-photo-grid-tile
         [photo]="item.photo"
         [label]="item.label"
         [disabled]="item.disabled ?? false"
+        [priority]="index < priorityTileCount"
         (selected)="photoSelected.emit(item.photo)"
       />
     </li>

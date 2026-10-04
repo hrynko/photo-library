@@ -14,6 +14,7 @@ export class PhotoGridTile {
   readonly photo = input.required<Photo>();
   readonly label = input.required<string>();
   readonly disabled = input(false);
+  readonly priority = input(false);
   readonly selected = output();
 
   protected readonly size = THUMBNAIL_SIZE;
