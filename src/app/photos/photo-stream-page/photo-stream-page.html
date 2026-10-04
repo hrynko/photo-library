@@ -1,0 +1,10 @@
+<app-photo-grid [items]="items()" (photoSelected)="addToFavorites($event)" />
+<div appInfiniteScroll [loading]="isLoading()" (scrolled)="loadMore()"></div>
+@if (isLoading()) {
+  <mat-progress-spinner
+    class="loader"
+    mode="indeterminate"
+    diameter="40"
+    aria-label="Loading photos"
+  />
+}
