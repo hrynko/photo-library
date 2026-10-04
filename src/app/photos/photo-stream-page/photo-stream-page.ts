@@ -1,5 +1,6 @@
 import { Component, DestroyRef, OnInit, computed, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { MatButton } from '@angular/material/button';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { finalize } from 'rxjs';
 
@@ -12,7 +13,7 @@ import { PhotoGrid, PhotoGridItem } from '../../shared/photo-grid/photo-grid';
 const BATCH_SIZE = 12;
 
 @Component({
-  imports: [InfiniteScroll, MatProgressSpinner, PhotoGrid],
+  imports: [InfiniteScroll, MatButton, MatProgressSpinner, PhotoGrid],
   selector: 'app-photo-stream-page',
   styleUrl: './photo-stream-page.scss',
   templateUrl: './photo-stream-page.html',
@@ -24,6 +25,7 @@ export class PhotoStreamPage implements OnInit {
 
   private readonly photos = signal<readonly Photo[]>([]);
 
+  protected readonly hasError = signal(false);
   protected readonly isLoading = signal(false);
   protected readonly items = computed<readonly PhotoGridItem[]>(() =>
     this.photos().map((photo, index) => {
@@ -47,7 +49,7 @@ export class PhotoStreamPage implements OnInit {
   }
 
   protected loadMore(): void {
-    if (this.isLoading()) {
+    if (this.isLoading() || this.hasError()) {
       return;
     }
     this.isLoading.set(true);
@@ -57,6 +59,14 @@ export class PhotoStreamPage implements OnInit {
         finalize(() => this.isLoading.set(false)),
         takeUntilDestroyed(this.destroyRef),
       )
-      .subscribe((photos) => this.photos.update((current) => [...current, ...photos]));
+      .subscribe({
+        next: (photos) => this.photos.update((current) => [...current, ...photos]),
+        error: () => this.hasError.set(true),
+      });
+  }
+
+  protected retry(): void {
+    this.hasError.set(false);
+    this.loadMore();
   }
 }

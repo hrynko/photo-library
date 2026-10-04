@@ -1,3 +1,14 @@
 .loader {
   margin: 24px auto;
 }
+
+.error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  margin-block: 24px;
+  text-align: center;
+  color: var(--mat-sys-on-surface-variant);
+  font: var(--mat-sys-body-large);
+}

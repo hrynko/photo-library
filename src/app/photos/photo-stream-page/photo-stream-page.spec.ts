@@ -1,6 +1,7 @@
 import { HarnessLoader } from '@angular/cdk/testing';
 import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { MatButtonHarness } from '@angular/material/button/testing';
 import { MatProgressSpinnerHarness } from '@angular/material/progress-spinner/testing';
 import { By } from '@angular/platform-browser';
 import { Subject } from 'rxjs';
@@ -63,6 +64,11 @@ describe('PhotoStreamPage', () => {
     await fixture.whenStable();
   }
 
+  async function fail(): Promise<void> {
+    requests.at(-1)?.error(new Error('Network error'));
+    await fixture.whenStable();
+  }
+
   async function scrollToEnd(): Promise<void> {
     fixture.debugElement
       .query(By.directive(InfiniteScroll))
@@ -77,6 +83,10 @@ describe('PhotoStreamPage', () => {
 
   function isLoaderShown(): Promise<boolean> {
     return loader.hasHarness(MatProgressSpinnerHarness);
+  }
+
+  function retryButton(): Promise<MatButtonHarness | null> {
+    return loader.getHarnessOrNull(MatButtonHarness.with({ text: 'Retry' }));
   }
 
   it('loads the first batch on init and shows the loader until it arrives', async () => {
@@ -141,5 +151,33 @@ describe('PhotoStreamPage', () => {
 
     expect(tiles()[0].getAttribute('aria-disabled')).toBe('true');
     expect(add).not.toHaveBeenCalled();
+  });
+
+  it('stops loading and offers a retry when a request fails', async () => {
+    await render();
+    await respond('a', 'b');
+    await scrollToEnd();
+
+    await fail();
+
+    expect(await isLoaderShown()).toBe(false);
+    expect(await retryButton()).not.toBeNull();
+    expect(fixture.debugElement.query(By.directive(InfiniteScroll))).toBeNull();
+    expect(tiles()).toHaveLength(2);
+  });
+
+  it('loads the next batch when retry is clicked', async () => {
+    await render();
+    await fail();
+
+    await (await retryButton())?.click();
+
+    expect(requests).toHaveLength(2);
+    expect(await isLoaderShown()).toBe(true);
+    expect(await retryButton()).toBeNull();
+
+    await respond('a');
+
+    expect(tiles()).toHaveLength(1);
   });
 });

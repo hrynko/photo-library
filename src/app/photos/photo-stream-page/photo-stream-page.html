@@ -1,5 +1,12 @@
 <app-photo-grid [items]="items()" (photoSelected)="addToFavorites($event)" />
-<div appInfiniteScroll [loading]="isLoading()" (scrolled)="loadMore()"></div>
+@if (hasError()) {
+  <section class="error" role="alert">
+    <p>Couldn't load more photos.</p>
+    <button matButton="tonal" type="button" (click)="retry()">Retry</button>
+  </section>
+} @else {
+  <div appInfiniteScroll [loading]="isLoading()" (scrolled)="loadMore()"></div>
+}
 @if (isLoading()) {
   <mat-progress-spinner
     class="loader"
