@@ -1,0 +1,8 @@
+@if (items().length > 0) {
+  <app-photo-grid [items]="items()" (photoSelected)="openPhoto($event)" />
+} @else {
+  <section class="empty">
+    <p>No favorites yet. Pick some photos you like and they will show up here.</p>
+    <a matButton="tonal" routerLink="/">Browse photos</a>
+  </section>
+}
