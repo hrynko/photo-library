@@ -1,0 +1,12 @@
+<ul class="grid">
+  @for (item of items(); track item.photo.id) {
+    <li>
+      <app-photo-grid-tile
+        [photo]="item.photo"
+        [label]="item.label"
+        [disabled]="item.disabled ?? false"
+        (selected)="photoSelected.emit(item.photo)"
+      />
+    </li>
+  }
+</ul>

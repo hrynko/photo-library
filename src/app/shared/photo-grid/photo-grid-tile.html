@@ -1,0 +1,10 @@
+<button
+  type="button"
+  class="tile"
+  matRipple
+  [matRippleDisabled]="disabled()"
+  [attr.aria-disabled]="disabled() || null"
+  (click)="select()"
+>
+  <img [ngSrc]="src()" [width]="size.width" [height]="size.height" [alt]="label()" />
+</button>
