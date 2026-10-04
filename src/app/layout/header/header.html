@@ -1,0 +1,23 @@
+<mat-toolbar>
+  <nav aria-label="Main">
+    <a
+      #photosLink="routerLinkActive"
+      routerLink="/"
+      routerLinkActive
+      ariaCurrentWhenActive="page"
+      [matButton]="photosLink.isActive ? 'tonal' : 'text'"
+      [routerLinkActiveOptions]="{ exact: true }"
+    >
+      Photos
+    </a>
+    <a
+      #favoritesLink="routerLinkActive"
+      routerLink="/favorites"
+      routerLinkActive
+      ariaCurrentWhenActive="page"
+      [matButton]="favoritesLink.isActive ? 'tonal' : 'text'"
+    >
+      Favorites
+    </a>
+  </nav>
+</mat-toolbar>
