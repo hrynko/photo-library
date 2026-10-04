@@ -1,5 +1,7 @@
 import { Routes } from '@angular/router';
 
+import { favoriteGuard } from './favorites/favorite-guard';
+
 export const routes: Routes = [
   {
     path: '',
@@ -12,6 +14,13 @@ export const routes: Routes = [
     title: 'Favorites',
     loadComponent: () =>
       import('./favorites/favorites-page/favorites-page').then((m) => m.FavoritesPage),
+  },
+  {
+    path: 'photos/:id',
+    title: 'Photo',
+    canActivate: [favoriteGuard],
+    loadComponent: () =>
+      import('./favorites/photo-detail-page/photo-detail-page').then((m) => m.PhotoDetailPage),
   },
   { path: '**', redirectTo: '' },
 ];
